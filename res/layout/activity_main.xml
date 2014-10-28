@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="#ffffff" >
+
+        <com.jingchen.timerpicker.PickerView
+            android:id="@+id/minute_pv"
+            android:layout_width="80dp"
+            android:layout_height="160dp" />
+
+        <TextView
+            android:id="@+id/minute_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/minute_pv"
+            android:text="分"
+            android:textColor="#ffaa33"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <com.jingchen.timerpicker.PickerView
+            android:id="@+id/second_pv"
+            android:layout_width="80dp"
+            android:layout_height="160dp"
+            android:layout_toRightOf="@id/minute_tv" />
+
+        <TextView
+            android:id="@+id/second_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/second_pv"
+            android:text="秒"
+            android:textColor="#ffaa33"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</RelativeLayout>
