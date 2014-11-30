@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.R.integer;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -120,6 +121,20 @@ public class PickerView extends View
 	public void setSelected(int selected)
 	{
 		mCurrentSelected = selected;
+		int distance = mDataList.size() / 2 - mCurrentSelected;
+		if (distance < 0)
+			for (int i = 0; i < -distance; i++)
+			{
+				moveHeadToTail();
+				mCurrentSelected--;
+			}
+		else if (distance > 0)
+			for (int i = 0; i < distance; i++)
+			{
+				moveTailToHead();
+				mCurrentSelected++;
+			}
+		invalidate();
 	}
 
 	private void moveHeadToTail()
