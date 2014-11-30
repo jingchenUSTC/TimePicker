@@ -118,6 +118,10 @@ public class PickerView extends View
 		invalidate();
 	}
 
+	/**
+	 * 选择选中的item的index
+	 * @param selected
+	 */
 	public void setSelected(int selected)
 	{
 		mCurrentSelected = selected;
@@ -135,6 +139,18 @@ public class PickerView extends View
 				mCurrentSelected++;
 			}
 		invalidate();
+	}
+	
+	/**
+	 * 选择选中的内容
+	 * @param mSelectItem
+	 */
+	public void setSelected(String mSelectItem){
+		for(int i = 0; i < mDataList.size(); i++)
+			if(mDataList.get(i).equals(mSelectItem)){
+				setSelected(i);
+				break;
+			}
 	}
 
 	private void moveHeadToTail()
