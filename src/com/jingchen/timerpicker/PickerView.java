@@ -1,12 +1,12 @@
-package com.jingchen.timerpicker;
+ï»¿package com.jingchen.timerpicker;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.R.integer;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
@@ -15,111 +15,114 @@ import android.graphics.Paint.Style;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * ¹ö¶¯Ñ¡ÔñÆ÷ ¸ü¶àÏê½â¼û²©¿Íhttp://blog.csdn.net/zhongkejingwang/article/details/38513301
+ * æ»šåŠ¨é€‰æ‹©å™¨ æ›´å¤šè¯¦è§£è§åšå®¢http://blog.csdn.net/zhongkejingwang/article/details/38513301
  * 
  * @author chenjing
  * 
  */
-public class PickerView extends View
-{
+public class PickerView extends View {
 
 	public static final String TAG = "PickerView";
 	/**
-	 * textÖ®¼ä¼ä¾àºÍminTextSizeÖ®±È
+	 * textä¹‹é—´é—´è·å’ŒminTextSizeä¹‹æ¯”
 	 */
-	public static final float MARGIN_ALPHA = 2.8f;
+	public static final float MARGIN_ALPHA = 2.5f;//å¤§äº2ä¿è¯åœ¨é—´è·å¤–çš„textæ˜¯æœ€å°sizeï¼Œæœ€å°sizeæ˜¯mViewHight/8.0f
 	/**
-	 * ×Ô¶¯»Ø¹öµ½ÖĞ¼äµÄËÙ¶È
+	 * è‡ªåŠ¨å›æ»šåˆ°ä¸­é—´çš„é€Ÿåº¦
 	 */
 	public static final float SPEED = 2;
 
 	private List<String> mDataList;
 	/**
-	 * Ñ¡ÖĞµÄÎ»ÖÃ£¬Õâ¸öÎ»ÖÃÊÇmDataListµÄÖĞĞÄÎ»ÖÃ£¬Ò»Ö±²»±ä
+	 * é€‰ä¸­çš„ä½ç½®ï¼Œè¿™ä¸ªä½ç½®æ˜¯mDataListçš„ä¸­å¿ƒä½ç½®ï¼Œä¸€ç›´ä¸å˜
 	 */
 	private int mCurrentSelected;
 	private Paint mPaint;
-
-	private float mMaxTextSize = 80;
-	private float mMinTextSize = 40;
+	/**
+	 * æœ€å¤§å­—ä½“
+	 */
+	private float mMaxTextSize = 0;//80
+	/**
+	 * æœ€å°å­—ä½“
+	 */
+	private float mMinTextSize = 0;//40
+	
+	private float spacing = 0;
 
 	private float mMaxTextAlpha = 255;
-	private float mMinTextAlpha = 120;
+	private float mMinTextAlpha = 150;
 
 	private int mColorText = 0x333333;
 
 	private int mViewHeight;
 	private int mViewWidth;
-
+	//æ‰‹æŒ‡æŒ‰ä¸‹çš„åæ ‡
 	private float mLastDownY;
 	/**
-	 * »¬¶¯µÄ¾àÀë
+	 * æ»‘åŠ¨çš„è·ç¦»
 	 */
 	private float mMoveLen = 0;
 	private boolean isInit = false;
 	private onSelectListener mSelectListener;
 	private Timer timer;
 	private MyTimerTask mTask;
+	
+	private boolean useDefault = false;
 
-	Handler updateHandler = new Handler()
-	{
+	Handler updateHandler = new Handler() {
 
 		@Override
-		public void handleMessage(Message msg)
-		{
-			if (Math.abs(mMoveLen) < SPEED)
+		public void handleMessage(Message msg) {
+			if (Math.abs(mMoveLen) < SPEED)// æ ¹æ®é€Ÿåº¦åˆ¤å®šæ˜¯å¦å·²ç»å›æ»šåˆ°ä¸­é—´
 			{
 				mMoveLen = 0;
-				if (mTask != null)
-				{
+				if (mTask != null) {
 					mTask.cancel();
 					mTask = null;
 					performSelect();
 				}
 			} else
-				// ÕâÀïmMoveLen / Math.abs(mMoveLen)ÊÇÎªÁË±£ÓĞmMoveLenµÄÕı¸ººÅ£¬ÒÔÊµÏÖÉÏ¹ö»òÏÂ¹ö
-				mMoveLen = mMoveLen - mMoveLen / Math.abs(mMoveLen) * SPEED;
+				// è¿™é‡ŒmMoveLen / Math.abs(mMoveLen)æ˜¯ä¸ºäº†ä¿æœ‰mMoveLençš„æ­£è´Ÿå·ï¼Œä»¥å®ç°ä¸Šæ»šæˆ–ä¸‹æ»š
+				mMoveLen = mMoveLen - mMoveLen / Math.abs(mMoveLen) * SPEED;//ä»¥2çš„é€Ÿåº¦å‘ä¸­é—´æ»šåŠ¨
 			invalidate();
 		}
 
 	};
+	private String width;
+	private String height;
 
-	public PickerView(Context context)
-	{
+	public PickerView(Context context) {
 		super(context);
-		init();
+		init(context,null);
 	}
 
-	public PickerView(Context context, AttributeSet attrs)
-	{
+	public PickerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init();
+		init(context,attrs);
 	}
 
-	public void setOnSelectListener(onSelectListener listener)
-	{
+	public void setOnSelectListener(onSelectListener listener) {
 		mSelectListener = listener;
 	}
 
-	private void performSelect()
-	{
+	private void performSelect() {
 		if (mSelectListener != null)
 			mSelectListener.onSelect(mDataList.get(mCurrentSelected));
 	}
 
-	public void setData(List<String> datas)
-	{
+	public void setData(List<String> datas) {
 		mDataList = datas;
 		mCurrentSelected = datas.size() / 2;
 		invalidate();
 	}
 
 	/**
-	 * Ñ¡ÔñÑ¡ÖĞµÄitemµÄindex
+	 * é€‰æ‹©é€‰ä¸­çš„itemçš„index
 	 * @param selected
 	 */
 	public void setSelected(int selected)
@@ -142,7 +145,7 @@ public class PickerView extends View
 	}
 	
 	/**
-	 * Ñ¡ÔñÑ¡ÖĞµÄÄÚÈİ
+	 * é€‰æ‹©é€‰ä¸­çš„å†…å®¹
 	 * @param mSelectItem
 	 */
 	public void setSelected(String mSelectItem){
@@ -153,121 +156,164 @@ public class PickerView extends View
 			}
 	}
 
-	private void moveHeadToTail()
-	{
+	// å°†ç¬¬ä¸€ä¸ªæ•°æ®ç§»åˆ°æœ€åä¸€ä¸ª
+	private void moveHeadToTail() {
 		String head = mDataList.get(0);
 		mDataList.remove(0);
 		mDataList.add(head);
 	}
 
-	private void moveTailToHead()
-	{
+	// ä¸ä¸Šé¢çš„æ–¹æ³•ç›¸å
+	private void moveTailToHead() {
 		String tail = mDataList.get(mDataList.size() - 1);
 		mDataList.remove(mDataList.size() - 1);
 		mDataList.add(0, tail);
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-	{
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		mViewHeight = getMeasuredHeight();
-		mViewWidth = getMeasuredWidth();
-		// °´ÕÕViewµÄ¸ß¶È¼ÆËã×ÖÌå´óĞ¡
-		mMaxTextSize = mViewHeight / 4.0f;
-		mMinTextSize = mMaxTextSize / 2f;
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		if (useDefault) {
+			setMeasuredDimension(mViewWidth, mViewHeight);
+		}else {
+			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+			mViewHeight = getMeasuredHeight();
+			mViewWidth = getMeasuredWidth();
+		}
+		if ( mMinTextSize == 0) {
+			if (mMaxTextSize == 0 ) {
+				// æŒ‰ç…§Viewçš„é«˜åº¦è®¡ç®—å­—ä½“å¤§å°
+				mMaxTextSize = mViewHeight / 4.0f;
+				mMinTextSize = mMaxTextSize / 2f;
+			}else {
+				mMinTextSize = mMaxTextSize / 2f;
+			}
+		}
+		
+		if (spacing == 0 || spacing < 2.5*mMaxTextSize) {
+			spacing = MARGIN_ALPHA * mMinTextSize;
+		}
+//		mMaxTextSize = mViewHeight / 4.0f;
+//		mMinTextSize = mMaxTextSize / 2f;
 		isInit = true;
-		invalidate();
+		//invalidate();//è¿™å¥è²Œä¼¼æ²¡ä»€ä¹ˆç”¨
 	}
-
-	private void init()
-	{
+	/**
+	 * åˆå§‹åŒ–å®šæ—¶å™¨å’Œç”»ç¬”
+	 */
+	private void init(Context context, AttributeSet attrs) {
 		timer = new Timer();
 		mDataList = new ArrayList<String>();
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		if (attrs != null) {
+			TypedArray tArray = context.obtainStyledAttributes(attrs, R.styleable.PickerView);
+			mColorText = tArray.getColor(R.styleable.PickerView_textColor, mColorText);
+			spacing = tArray.getFloat(R.styleable.PickerView_spacing, spacing);
+			mMaxTextAlpha = tArray.getFloat(R.styleable.PickerView_maxAlpha, mMaxTextAlpha);
+			mMinTextAlpha = tArray.getFloat(R.styleable.PickerView_minAlpha, mMinTextAlpha);
+			mMaxTextSize = tArray.getFloat(R.styleable.PickerView_maxTextSize, mMaxTextSize);
+			mMinTextSize = tArray.getFloat(R.styleable.PickerView_minTextSize, mMinTextSize);
+			tArray.recycle();
+		}
+		
+		width = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_width");
+		height = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
+		
+		final float scale = context.getResources().getDisplayMetrics().density; 
+		if (width.equals("-2")) {
+			if (mMaxTextSize == 0) {
+				mViewHeight = (int) (160 * scale + 0.5f);
+				mViewWidth = (int) (80 * scale + 0.5f);
+			}else {
+				mViewHeight = (int)mMaxTextSize * 4;
+				mViewWidth = (int)mMaxTextSize * 2;
+			}
+			useDefault = true;
+		}else if(width.equals("-1")){
+			useDefault = false;
+		}else {
+			String[] split = width.split("d");
+			String[] split2 = height.split("d");
+			mViewHeight = (int) (Float.valueOf(split2[0]) * scale + 0.5f);
+			mViewWidth = (int) (Float.valueOf(split[0]) * scale + 0.5f);
+			useDefault = true;
+		}
+		
 		mPaint.setStyle(Style.FILL);
 		mPaint.setTextAlign(Align.CENTER);
 		mPaint.setColor(mColorText);
 	}
 
 	@Override
-	protected void onDraw(Canvas canvas)
-	{
+	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		// ¸ù¾İindex»æÖÆview
+		// æ ¹æ®indexç»˜åˆ¶view
 		if (isInit)
 			drawData(canvas);
 	}
-
-	private void drawData(Canvas canvas)
-	{
-		// ÏÈ»æÖÆÑ¡ÖĞµÄtextÔÙÍùÉÏÍùÏÂ»æÖÆÆäÓàµÄtext
-		float scale = parabola(mViewHeight / 4.0f, mMoveLen);
+	/**
+	 * ç”»æ–‡å­—
+	 * @param canvas
+	 */
+	private void drawData(Canvas canvas) {
+		// å…ˆç»˜åˆ¶é€‰ä¸­çš„textå†å¾€ä¸Šå¾€ä¸‹ç»˜åˆ¶å…¶ä½™çš„text
+		float scale = parabola(mViewHeight / 4.0f, mMoveLen);//åˆå§‹å€¼ä¸º1
 		float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
 		mPaint.setTextSize(size);
-		mPaint.setAlpha((int) ((mMaxTextAlpha - mMinTextAlpha) * scale + mMinTextAlpha));
-		// text¾ÓÖĞ»æÖÆ£¬×¢ÒâbaselineµÄ¼ÆËã²ÅÄÜ´ïµ½¾ÓÖĞ£¬yÖµÊÇtextÖĞĞÄ×ø±ê
+		mPaint.setAlpha((int) ((mMaxTextAlpha - mMinTextAlpha) * scale + mMinTextAlpha));//åŒæ ·é€šè¿‡scaleæ§åˆ¶alphaçš„å˜åŒ–
+		// textå±…ä¸­ç»˜åˆ¶ï¼Œæ³¨æ„baselineçš„è®¡ç®—æ‰èƒ½è¾¾åˆ°å±…ä¸­ï¼Œyå€¼æ˜¯textä¸­å¿ƒåæ ‡
 		float x = (float) (mViewWidth / 2.0);
 		float y = (float) (mViewHeight / 2.0 + mMoveLen);
-		FontMetricsInt fmi = mPaint.getFontMetricsInt();
-		float baseline = (float) (y - (fmi.bottom / 2.0 + fmi.top / 2.0));
-
-		canvas.drawText(mDataList.get(mCurrentSelected), x, baseline, mPaint);
-		// »æÖÆÉÏ·½data
-		for (int i = 1; (mCurrentSelected - i) >= 0; i++)
-		{
+		FontMetricsInt fmi = mPaint.getFontMetricsInt();//ç”¨æ¥è®¡ç®—paintçš„baseline
+		float baseline = (float) (y - (fmi.bottom / 2.0 + fmi.top / 2.0));//è®¡ç®—baselineï¼Œfmiçš„bottom+topæ˜¯è¿™æ®µtextæ‰€å çš„ç›¸å¯¹ä½ç§»ï¼Œ/2æ˜¯ä¸€åŠï¼Œyæ˜¯ä¸­å¿ƒï¼Œå‡å»ä¸€åŠæ˜¯æœ€åº•ä¸‹ï¼Œç„¶åtextå°±åœ¨è¿™ä¸ªbaselineä¹‹ä¸Šç»˜åˆ¶ã€‚
+//		canvas.drawLine(0, baseline, x+mViewWidth/2, baseline, mPaint);
+		canvas.drawText(mDataList.get(mCurrentSelected), x, baseline, mPaint);//å¦‚æœè¿™é‡Œä¸ç”¨baselineè€Œæ˜¯ç”¨y+mViewHeight/8ä¼šé ä¸‹ï¼Œä¸å‡†ç¡®ã€‚
+		// ç»˜åˆ¶ä¸Šæ–¹data
+		for (int i = 1; (mCurrentSelected - i) >= 0; i++) {
 			drawOtherText(canvas, i, -1);
 		}
-		// »æÖÆÏÂ·½data
-		for (int i = 1; (mCurrentSelected + i) < mDataList.size(); i++)
-		{
+		// ç»˜åˆ¶ä¸‹æ–¹data
+		for (int i = 1; (mCurrentSelected + i) < mDataList.size(); i++) {
 			drawOtherText(canvas, i, 1);
 		}
-
 	}
 
 	/**
 	 * @param canvas
 	 * @param position
-	 *            ¾àÀëmCurrentSelectedµÄ²îÖµ
+	 *            è·ç¦»mCurrentSelectedçš„å·®å€¼
 	 * @param type
-	 *            1±íÊ¾ÏòÏÂ»æÖÆ£¬-1±íÊ¾ÏòÉÏ»æÖÆ
+	 *            1è¡¨ç¤ºå‘ä¸‹ç»˜åˆ¶ï¼Œ-1è¡¨ç¤ºå‘ä¸Šç»˜åˆ¶
 	 */
-	private void drawOtherText(Canvas canvas, int position, int type)
-	{
-		float d = (float) (MARGIN_ALPHA * mMinTextSize * position + type
-				* mMoveLen);
-		float scale = parabola(mViewHeight / 4.0f, d);
+	private void drawOtherText(Canvas canvas, int position, int type) {
+//		float d = (float) (MARGIN_ALPHA * mMinTextSize * position + type * mMoveLen);//MARGIN_ALPHA * mMinTextSizeå°±æ˜¯ä¸¤ä¸ªtextä¹‹é—´çš„é—´è·
+		float d = (float) (spacing * position + type * mMoveLen);//MARGIN_ALPHA * mMinTextSizeå°±æ˜¯ä¸¤ä¸ªtextä¹‹é—´çš„é—´è·
+		float scale = parabola(mViewHeight / 4.0f, d);//0
 		float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
 		mPaint.setTextSize(size);
 		mPaint.setAlpha((int) ((mMaxTextAlpha - mMinTextAlpha) * scale + mMinTextAlpha));
 		float y = (float) (mViewHeight / 2.0 + type * d);
 		FontMetricsInt fmi = mPaint.getFontMetricsInt();
 		float baseline = (float) (y - (fmi.bottom / 2.0 + fmi.top / 2.0));
-		canvas.drawText(mDataList.get(mCurrentSelected + type * position),
-				(float) (mViewWidth / 2.0), baseline, mPaint);
+		canvas.drawText(mDataList.get(mCurrentSelected + type * position),(float) (mViewWidth / 2.0), baseline, mPaint);
 	}
 
 	/**
-	 * Å×ÎïÏß
-	 * 
+	 * æŠ›ç‰©çº¿
+	 * ä¸»è¦æ˜¯æ ¹æ®åç§»é‡è®¡ç®—ç¼©æ”¾å¤§å°ä»è€Œç¡®å®šå­—ä½“å¤§å°å’Œé€æ˜åº¦
 	 * @param zero
-	 *            Áãµã×ø±ê
+	 *            é›¶ç‚¹åæ ‡
 	 * @param x
-	 *            Æ«ÒÆÁ¿
+	 *            åç§»é‡
 	 * @return scale
 	 */
-	private float parabola(float zero, float x)
-	{
-		float f = (float) (1 - Math.pow(x / zero, 2));
+	private float parabola(float zero, float x) {
+		float f = (float) (1 - Math.pow(x / zero, 2));//1-(x/zero)^2
 		return f < 0 ? 0 : f;
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-		switch (event.getActionMasked())
-		{
+	public boolean onTouchEvent(MotionEvent event) {
+		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			doDown(event);
 			break;
@@ -281,47 +327,39 @@ public class PickerView extends View
 		return true;
 	}
 
-	private void doDown(MotionEvent event)
-	{
-		if (mTask != null)
-		{
+	private void doDown(MotionEvent event) {
+		if (mTask != null) {
 			mTask.cancel();
 			mTask = null;
 		}
 		mLastDownY = event.getY();
 	}
 
-	private void doMove(MotionEvent event)
-	{
+	private void doMove(MotionEvent event) {
 
 		mMoveLen += (event.getY() - mLastDownY);
 
-		if (mMoveLen > MARGIN_ALPHA * mMinTextSize / 2)
-		{
-			// ÍùÏÂ»¬³¬¹ıÀë¿ª¾àÀë
+		if (mMoveLen > MARGIN_ALPHA * mMinTextSize / 2) {
+			// å¾€ä¸‹æ»‘è¶…è¿‡ç¦»å¼€è·ç¦»
 			moveTailToHead();
 			mMoveLen = mMoveLen - MARGIN_ALPHA * mMinTextSize;
-		} else if (mMoveLen < -MARGIN_ALPHA * mMinTextSize / 2)
-		{
-			// ÍùÉÏ»¬³¬¹ıÀë¿ª¾àÀë
+		} else if (mMoveLen < -MARGIN_ALPHA * mMinTextSize / 2) {
+			// å¾€ä¸Šæ»‘è¶…è¿‡ç¦»å¼€è·ç¦»
 			moveHeadToTail();
 			mMoveLen = mMoveLen + MARGIN_ALPHA * mMinTextSize;
 		}
 
 		mLastDownY = event.getY();
-		invalidate();
+		invalidate();//è¿™é‡Œé‡ç»˜ç•Œé¢ä¿æŒå®æ—¶æ›´æ–°ç•Œé¢ï¼Œé‡èµ°onMesureå’ŒonDraw
 	}
 
-	private void doUp(MotionEvent event)
-	{
-		// Ì§ÆğÊÖºómCurrentSelectedµÄÎ»ÖÃÓÉµ±Ç°Î»ÖÃmoveµ½ÖĞ¼äÑ¡ÖĞÎ»ÖÃ
-		if (Math.abs(mMoveLen) < 0.0001)
-		{
+	private void doUp(MotionEvent event) {
+		// æŠ¬èµ·æ‰‹åmCurrentSelectedçš„ä½ç½®ç”±å½“å‰ä½ç½®moveåˆ°ä¸­é—´é€‰ä¸­ä½ç½®
+		if (Math.abs(mMoveLen) < 0.0001) {
 			mMoveLen = 0;
 			return;
 		}
-		if (mTask != null)
-		{
+		if (mTask != null) {
 			mTask.cancel();
 			mTask = null;
 		}
@@ -329,25 +367,22 @@ public class PickerView extends View
 		timer.schedule(mTask, 0, 10);
 	}
 
-	class MyTimerTask extends TimerTask
-	{
+	class MyTimerTask extends TimerTask {
 		Handler handler;
 
-		public MyTimerTask(Handler handler)
-		{
+		public MyTimerTask(Handler handler) {
 			this.handler = handler;
 		}
 
 		@Override
-		public void run()
-		{
+		public void run() {
 			handler.sendMessage(handler.obtainMessage());
 		}
 
 	}
 
-	public interface onSelectListener
-	{
+	public interface onSelectListener {
 		void onSelect(String text);
 	}
+	
 }

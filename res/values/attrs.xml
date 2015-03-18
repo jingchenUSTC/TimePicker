@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name = "PickerView" >
+        <attr name = "spacing" format = "float" />
+        <attr name = "minTextSize" format="float" />
+        <attr name = "maxTextSize" format="float" />
+        <attr name = "minAlpha" format="float" />
+        <attr name = "maxAlpha" format="float" />
+        <attr name = "textColor" format="color" />
+    </declare-styleable>
+</resources>
