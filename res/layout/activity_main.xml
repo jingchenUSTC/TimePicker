@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:pick = "http://schemas.android.com/apk/res/com.jingchen.timerpicker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000" >
@@ -11,8 +12,12 @@
 
         <com.jingchen.timerpicker.PickerView
             android:id="@+id/minute_pv"
-            android:layout_width="80dp"
-            android:layout_height="160dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            pick:spacing = "80"
+            pick:textColor = "#FF8080FF"
+            pick:maxAlpha = "255"
+            pick:minAlpha = "50"/>
 
         <TextView
             android:id="@+id/minute_tv"
