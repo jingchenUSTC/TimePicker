@@ -3,16 +3,15 @@ package com.jingchen.timerpicker;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jingchen.timerpicker.PickerView.onSelectListener;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jingchen.timerpicker.PickerView.onSelectListener;
+
 /**
- * ¸ü¶àÏê½â¼û²©¿Íhttp://blog.csdn.net/zhongkejingwang/article/details/38513301
+ * æ›´å¤šè¯¦è§£è§åšå®¢http://blog.csdn.net/zhongkejingwang/article/details/38513301
  * 
  * @author chenjing
  * 
@@ -47,7 +46,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onSelect(String text)
 			{
-				Toast.makeText(MainActivity.this, "Ñ¡ÔñÁË " + text + " ·Ö",
+				Toast.makeText(MainActivity.this, "é€‰æ‹©äº† " + text + " åˆ†",
 						Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -58,7 +57,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onSelect(String text)
 			{
-				Toast.makeText(MainActivity.this, "Ñ¡ÔñÁË " + text + " Ãë",
+				Toast.makeText(MainActivity.this, "é€‰æ‹©äº† " + text + " ç§’",
 						Toast.LENGTH_SHORT).show();
 			}
 		});
