@@ -12,43 +12,50 @@
         android:background="#ffffff"
         android:padding="15dp">
 
-        <com.jingchen.timerpicker.PickerView
-            android:id="@+id/minute_pv"
-            android:layout_width="80dp"
-            android:layout_height="160dp"/>
-
-        <TextView
-            android:id="@+id/minute_tv"
+        <RelativeLayout
+            android:id="@+id/rl_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/minute_pv"
-            android:text="@string/minute"
-            android:textColor="#ffaa33"
-            android:textSize="26sp"
-            android:textStyle="bold"/>
+            android:layout_height="wrap_content">
+            <com.jingchen.timerpicker.PickerView
+                android:id="@+id/minute_pv"
+                android:layout_width="80dp"
+                android:layout_height="160dp"/>
 
-        <com.jingchen.timerpicker.PickerView
-            android:id="@+id/second_pv"
-            android:layout_width="80dp"
-            android:layout_height="160dp"
-            android:layout_toRightOf="@id/minute_tv"/>
+            <TextView
+                android:id="@+id/minute_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/minute_pv"
+                android:text="@string/minute"
+                android:textColor="#ffaa33"
+                android:textSize="26sp"
+                android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/second_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/second_pv"
-            android:text="@string/second"
-            android:textColor="#ffaa33"
-            android:textSize="26sp"
-            android:textStyle="bold"/>
+            <com.jingchen.timerpicker.PickerView
+                android:id="@+id/second_pv"
+                android:layout_width="80dp"
+                android:layout_height="160dp"
+                android:layout_toRightOf="@id/minute_tv"/>
+
+            <TextView
+                android:id="@+id/second_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/second_pv"
+                android:text="@string/second"
+                android:textColor="#ffaa33"
+                android:textSize="26sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/ll_v_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/second_pv"
+            android:layout_below="@id/rl_time"
             android:layout_centerHorizontal="true"
             android:gravity="center">
 
@@ -80,6 +87,7 @@
                     android:text="@string/no"/>
             </RadioGroup>
         </LinearLayout>
+
     </RelativeLayout>
 
     <LinearLayout
