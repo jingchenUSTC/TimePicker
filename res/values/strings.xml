@@ -4,5 +4,26 @@
     <string name="app_name">TimerPicker</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="horizontal_pickerview">横向的选择器</string>
+    <string name="vertical_pickerview">纵向的选择器</string>
+    <string name="is_repeat">循环：</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="minute">分</string>
+    <string name="second">秒</string>
+
+    <string name="gram">克</string>
+    <string name="bowl">碗</string>
+    <string name="scoop">勺</string>
+    <string name="granule">粒</string>
+
+    <string-array name="units">
+        <item>@string/gram</item>
+        <item>@string/bowl</item>
+        <item>@string/scoop</item>
+        <item>@string/granule</item>
+        <item>@string/minute</item>
+        <item>@string/second</item>
+    </string-array>
 
 </resources>

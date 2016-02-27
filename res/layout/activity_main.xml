@@ -1,18 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000">
 
     <RelativeLayout
+        android:id="@+id/rl_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="#ffffff" >
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:background="#ffffff"
+        android:padding="15dp">
 
         <com.jingchen.timerpicker.PickerView
             android:id="@+id/minute_pv"
             android:layout_width="80dp"
-            android:layout_height="160dp" />
+            android:layout_height="160dp"/>
 
         <TextView
             android:id="@+id/minute_tv"
@@ -20,16 +23,16 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/minute_pv"
-            android:text="分"
+            android:text="@string/minute"
             android:textColor="#ffaa33"
             android:textSize="26sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <com.jingchen.timerpicker.PickerView
             android:id="@+id/second_pv"
             android:layout_width="80dp"
             android:layout_height="160dp"
-            android:layout_toRightOf="@id/minute_tv" />
+            android:layout_toRightOf="@id/minute_tv"/>
 
         <TextView
             android:id="@+id/second_tv"
@@ -37,10 +40,104 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/second_pv"
-            android:text="秒"
+            android:text="@string/second"
             android:textColor="#ffaa33"
             android:textSize="26sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/second_pv"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_v_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/is_repeat"
+                android:textSize="21sp"/>
+
+            <RadioGroup
+                android:id="@+id/rg_v_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_v_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/yes"/>
+
+                <RadioButton
+                    android:id="@+id/rb_v_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no"/>
+            </RadioGroup>
+        </LinearLayout>
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_vertical"
+        android:layout_marginTop="40dp"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <com.jingchen.timerpicker.PickerView
+            android:id="@+id/pv_value"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="15dp"
+            />
+
+        <com.jingchen.timerpicker.PickerView
+            android:id="@+id/pv_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginBottom="15dp"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_h_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/is_repeat"
+                android:textSize="21sp"/>
+
+            <RadioGroup
+                android:id="@+id/rg_h_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_h_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/yes"/>
+
+                <RadioButton
+                    android:id="@+id/rb_h_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no"/>
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
